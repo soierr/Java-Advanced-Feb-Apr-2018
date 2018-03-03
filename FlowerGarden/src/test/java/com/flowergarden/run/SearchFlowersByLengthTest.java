@@ -29,7 +29,7 @@ public class SearchFlowersByLengthTest {
 	private int roseLength = 100;
 	
 	@Before
-	public void creatBouquet(){
+	public void prepareBouquet(){
 		
 		Rose rose = new Rose(false,roseLength,50,new FreshnessInteger(80));
 		Chamomile chamomile = new Chamomile(15, 70, 30, new FreshnessInteger(80));

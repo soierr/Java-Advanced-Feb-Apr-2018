@@ -21,14 +21,14 @@ public class GetPriceFlowerTest {
 	private Rose rose = null;
 	
 	@Before
-	public void setFlowerPrice(){
+	public void prepareFlowerPrice(){
 		
 		 rose = new Rose(true, 85, etalonPrice, new FreshnessInteger(89));
 		
 	}
 	
 	@Test
-	public void getFlowerPriceTest(){
+	public void getPriceFlowerTest(){
 		
 		Assert.assertEquals(etalonPrice, rose.getPrice(), deltaZero);
 	}

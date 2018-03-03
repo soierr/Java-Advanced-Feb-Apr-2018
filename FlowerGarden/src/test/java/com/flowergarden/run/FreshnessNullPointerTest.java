@@ -14,7 +14,7 @@ import com.flowergarden.flowers.GeneralFlower;
  * @author SOIERR
  *
  */
-public class FrreshnessNullPointerTest {
+public class FreshnessNullPointerTest {
 	
 		private Bouquet<GeneralFlower> bouquet = null;
 	
@@ -29,7 +29,7 @@ public class FrreshnessNullPointerTest {
 	}
 	
 	@Test(expected=NullPointerException.class)
-	public void freshnessComparableTest(){
+	public void freshnessNullPointerTest(){
 		
 		bouquet.sortByFreshness();
 	}

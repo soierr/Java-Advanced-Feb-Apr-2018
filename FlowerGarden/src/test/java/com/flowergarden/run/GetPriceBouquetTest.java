@@ -26,7 +26,7 @@ public class GetPriceBouquetTest {
 	private float assembledPrice = 100;
 	
 	@Before
-	public void setFlowerPrice(){
+	public void prepareBouquetPrice(){
 
 		bouquet = new MarriedBouquet();
 		bouquet.addFlower(new Rose(true, 85, rosePrice, new FreshnessInteger(89)));
@@ -37,7 +37,7 @@ public class GetPriceBouquetTest {
 	}
 	
 	@Test
-	public void getFlowerPriceTest(){
+	public void getPriceBouquetTest(){
 		
 		Assert.assertEquals((2*chamomilePrice)+rosePrice, bouquet.getPrice(), assembledPrice);
 	}
