@@ -1,15 +1,11 @@
 package com.flowergarden.bouquet;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import com.flowergarden.flowers.Chamomile;
 import com.flowergarden.flowers.GeneralFlower;
-import com.flowergarden.flowers.Rose;
 
 public class MarriedBouquet implements Bouquet<GeneralFlower> {
 
