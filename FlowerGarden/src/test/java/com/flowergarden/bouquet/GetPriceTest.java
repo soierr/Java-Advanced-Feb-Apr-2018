@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.flowergarden.run;
+package com.flowergarden.bouquet;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -18,7 +18,7 @@ import com.flowergarden.properties.FreshnessInteger;
  * @author SOIERR
  *
  */
-public class GetPriceBouquetTest {
+public class GetPriceTest {
 
 	private Bouquet<GeneralFlower> bouquet = null;
 	private float chamomilePrice = 50f;
@@ -37,7 +37,7 @@ public class GetPriceBouquetTest {
 	}
 	
 	@Test
-	public void getPriceBouquetTest(){
+	public void getPriceTest(){
 		
 		Assert.assertEquals((2*chamomilePrice)+rosePrice, bouquet.getPrice(), assembledPrice);
 	}

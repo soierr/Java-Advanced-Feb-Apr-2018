@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.flowergarden.run;
+package com.flowergarden.bouquet;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -27,12 +27,13 @@ public class SearchFlowersByLengthTest {
 	
 	private Bouquet<GeneralFlower> bouquet = null;
 	private int roseLength = 100;
+	private int camomileLength = 70;
 	
 	@Before
 	public void prepareBouquet(){
 		
 		Rose rose = new Rose(false,roseLength,50,new FreshnessInteger(80));
-		Chamomile chamomile = new Chamomile(15, 70, 30, new FreshnessInteger(80));
+		Chamomile chamomile = new Chamomile(15, camomileLength, 30, new FreshnessInteger(80));
 		bouquet = new MarriedBouquet();
 		bouquet.addFlower(rose);
 		bouquet.addFlower(chamomile);

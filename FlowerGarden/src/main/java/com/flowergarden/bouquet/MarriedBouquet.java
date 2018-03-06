@@ -50,4 +50,10 @@ public class MarriedBouquet implements Bouquet<GeneralFlower> {
 	public void setAssembledPrice(float price) {
 		assemblePrice = price;
 	}
+	
+	/*Only for mocking*/
+	final void setFlowerListTest(List<GeneralFlower> list){
+		
+		this.flowerList = list;
+	}
 }

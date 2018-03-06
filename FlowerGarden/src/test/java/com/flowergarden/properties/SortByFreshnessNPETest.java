@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.flowergarden.run;
+package com.flowergarden.properties;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +14,7 @@ import com.flowergarden.flowers.GeneralFlower;
  * @author SOIERR
  *
  */
-public class FreshnessNullPointerTest {
+public class SortByFreshnessNPETest {
 	
 		private Bouquet<GeneralFlower> bouquet = null;
 	
@@ -29,7 +29,7 @@ public class FreshnessNullPointerTest {
 	}
 	
 	@Test(expected=NullPointerException.class)
-	public void freshnessNullPointerTest(){
+	public void sortByFreshnessNPETest(){
 		
 		bouquet.sortByFreshness();
 	}
