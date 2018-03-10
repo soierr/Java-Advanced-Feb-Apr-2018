@@ -5,6 +5,8 @@ package com.flowergarden.bouquet;
 
 import static org.mockito.Mockito.*;
 
+import java.util.Collection;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,13 +15,16 @@ import org.mockito.stubbing.Answer;
 
 import com.flowergarden.bouquet.Bouquet;
 import com.flowergarden.bouquet.MarriedBouquet;
+import com.flowergarden.flowers.Chamomile;
 import com.flowergarden.flowers.GeneralFlower;
+import com.flowergarden.flowers.Rose;
+import com.flowergarden.flowers.Tulip;
 
 /**
  * @author SOIERR
  *
  */
-public class GetPriceMockTest {
+public class BouquetMockTest {
 	
 	GeneralFlower flowerMocked = mock(GeneralFlower.class);
 	GeneralFlower flowerMocked2 = mock(GeneralFlower.class);
@@ -57,5 +62,31 @@ public class GetPriceMockTest {
 	public void getPriceBouquetTest(){
 		
 		Assert.assertEquals(bouquet.getPrice(), bouquetMocked.getPrice(), assembledPrice);
+	}
+	
+	@Test
+	public void searchFlowersByLenghtTest(){
+		
+		Rose roseMocked = mock(Rose.class);
+		Tulip tulipMocked = mock(Tulip.class);
+		Chamomile chamomileMocked = mock(Chamomile.class);
+		
+		int inRangeLength = 150;
+		int outRangeLength = 50;
+		int expectedNumFlowersSearched = 2;
+		
+		Bouquet<GeneralFlower> bouquet = new MarriedBouquet();
+		
+		when(roseMocked.getLenght()).thenReturn(inRangeLength);
+		when(tulipMocked.getLenght()).thenReturn(inRangeLength);
+		when(chamomileMocked.getLenght()).thenReturn(outRangeLength);
+		
+		bouquet.addFlower(roseMocked);
+		bouquet.addFlower(tulipMocked);
+		bouquet.addFlower(chamomileMocked);
+		
+		Collection<GeneralFlower> col = bouquet.searchFlowersByLenght(inRangeLength, inRangeLength);
+		
+		Assert.assertEquals(col.size(), expectedNumFlowersSearched, 0);
 	}
 }
