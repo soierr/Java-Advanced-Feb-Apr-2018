@@ -1,0 +1,11 @@
+insert into flowers(name, length, freshness, price, petals, spike) values("Chamomile", 100, 95, 125, 10, 0);
+insert into flowers(name, length, freshness, price, petals, spike) values("Rose", 150, 90, 150, 19, 1);
+insert into flowers(name, length, freshness, price, petals, spike) values("Tulip", 90, 96, 85, 13, 0);
+insert into flowers(name, length, freshness, price, petals, spike) values("Carnation", 80, 97, 80, 25, 0);
+
+insert into bouquet_templates(name, assembled_price) values('First Date', 35);
+insert into bouquet_templates(name, assembled_price) values('Wedding', 75);
+
+insert into bouquets(bouquet_template_id, flower_id) select b.id, f.id from flowers f, (select bt.id from bouquet_templates bt where bt.name in ('First Date')) b where f.name in ('Rose');
+insert into bouquets(bouquet_template_id, flower_id) select b.id, f.id from flowers f, (select bt.id from bouquet_templates bt where bt.name in ('First Date')) b where f.name in ('Rose');
+insert into bouquets(bouquet_template_id, flower_id) select b.id, f.id from flowers f, (select bt.id from bouquet_templates bt where bt.name in ('First Date')) b where f.name in ('Rose');

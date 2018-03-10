@@ -1,0 +1,12 @@
+sqlInsertFlower=insert into flowers(id, name, length, freshness, price, petals, spike) values(?, ?, ?, ?, ?, ?, ?)
+
+sqlInsertBouquetTemplate=insert into bouquet_templates(name, assembled_price) values(?,?)
+sqlDeleteBouquetTemplate=delete from bouquet_templates where id == ?
+sqlUpdateBouquetTemplate=replace into bouquet_templates(id, name, assembled_price) values(?,?,?)
+
+sqlInsertBouquet=insert into bouquets(bouquet_template_id, flower_id) values(?, ?)
+sqlSelectFlowers=select id, name, length, freshness, price, petals, spike from flowers
+sqlSelectBouquetById=select bt.id, bt.name, f.id, f.name, f.length, f.freshness, f.price, f.petals, f.spike, bt.assembled_price from flowers f, bouquet_templates bt, bouquets b where bt.id == ? and bt.id = b.bouquet_template_id and f.id = b.flower_id
+sqlSelectBouquetByName=select bt.id, bt.name, f.id, f.name, f.length, f.freshness, f.price, f.petals, f.spike, bt.assembled_price from flowers f, bouquet_templates bt, bouquets b where bt.name in (?) and bt.id = b.bouquet_template_id and f.id = b.flower_id
+
+sqlDeleteFlowersFromBouquet=delete from bouquets where bouquet_template_id = ?

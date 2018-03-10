@@ -1,0 +1,24 @@
+CREATE TABLE flowers(
+    id        INTEGER PRIMARY KEY autoincrement not null,
+    name      VARCHAR (16),
+    length    INT,
+    freshness INT,
+    price     DECIMAL,
+    petals    INT,
+    spike     BOOLEAN
+);
+
+CREATE TABLE bouquet_templates (
+    id              INTEGER      PRIMARY KEY autoincrement NOT NULL,
+    name            VARCHAR (16) NOT NULL,
+    assembled_price INT          NOT NULL
+);
+
+CREATE TABLE bouquets(
+
+    bouquet_template_id integer,
+    flower_id integer,
+    FOREIGN KEY(bouquet_template_id) REFERENCES bouquet_templates(id),
+    FOREIGN KEY(flower_id) REFERENCES flowers(id)
+    
+);
