@@ -46,4 +46,7 @@ pom.xml.releaseBackup
 pom.xml.tag
 /FlowerGarden/.metadata
 /workspace
+flowergarden-gl.db
+.README.md.html
+*.ucls
 
