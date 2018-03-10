@@ -100,9 +100,9 @@ public class BouquetMockTest {
 		int expectedNumFlowersSearched = 2;
 
 		
-		when(roseMocked.getLenght()).thenReturn(inRangeLength);
-		when(tulipMocked.getLenght()).thenReturn(inRangeLength);
-		when(chamomileMocked.getLenght()).thenReturn(outRangeLength);
+		when(roseMocked.getLength()).thenReturn(inRangeLength);
+		when(tulipMocked.getLength()).thenReturn(inRangeLength);
+		when(chamomileMocked.getLength()).thenReturn(outRangeLength);
 		
 		bouquetTarget.addFlower(roseMocked);
 		bouquetTarget.addFlower(tulipMocked);

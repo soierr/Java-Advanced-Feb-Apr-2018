@@ -7,20 +7,12 @@ import org.junit.ClassRule;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import com.flowergarden.properties.SortByFreshnessMockTest;
-import com.flowergarden.properties.SortByFreshnessNPETest;
-import com.flowergarden.properties.SortByFreshnessTest;
-
 /**
  * @author SOIERR
  *
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-
-	SortByFreshnessMockTest.class,
-	SortByFreshnessNPETest.class,
-	SortByFreshnessTest.class
 	
 })
 /*
