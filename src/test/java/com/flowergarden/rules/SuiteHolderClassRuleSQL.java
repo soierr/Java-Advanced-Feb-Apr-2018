@@ -7,9 +7,6 @@ import org.junit.ClassRule;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import com.flowergarden.dao.DaoBouquetTemplateTest;
-import com.flowergarden.dao.DaoBouquetTest;
-import com.flowergarden.dao.DaoFlowerImplTest;
 
 /**
  * @author SOIERR
@@ -17,11 +14,8 @@ import com.flowergarden.dao.DaoFlowerImplTest;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+
 	
-	/*Put needed db related test here*/
-	DaoBouquetTemplateTest.class,
-	DaoBouquetTest.class,
-	DaoFlowerImplTest.class
 	
 })
 /*
@@ -31,6 +25,6 @@ public class SuiteHolderClassRuleSQL {
 	
 	
 	@ClassRule
-	public static CreateDbAndSampleDataRule createDropDbObjectsRule = new CreateDbAndSampleDataRule();
+	public static CreateDropDbObjectsRule createDropDbObjectsRule = new CreateDropDbObjectsRule();
 	
 }

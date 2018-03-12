@@ -1,12 +1,17 @@
+sqlSelectFlowerById=select id, name, length, freshness, price, petals, spike from flowers where id = ?
 sqlInsertFlower=insert into flowers(id, name, length, freshness, price, petals, spike) values(?, ?, ?, ?, ?, ?, ?)
+sqlUpdateFlower=replace into flowers(id, name, length, freshness, price, petals, spike) values(?, ?, ?, ?, ?, ?, ?)
+sqlDeleteFlower=delete from flowers where id = ?
 
 sqlInsertBouquetTemplate=insert into bouquet_templates(name, assembled_price) values(?,?)
-sqlDeleteBouquetTemplate=delete from bouquet_templates where id == ?
+sqlDeleteBouquetTemplate=delete from bouquet_templates where id = ?
 sqlUpdateBouquetTemplate=replace into bouquet_templates(id, name, assembled_price) values(?,?,?)
 
 sqlInsertBouquet=insert into bouquets(bouquet_template_id, flower_id) values(?, ?)
-sqlSelectFlowers=select id, name, length, freshness, price, petals, spike from flowers
-sqlSelectBouquetById=select bt.id, bt.name, f.id, f.name, f.length, f.freshness, f.price, f.petals, f.spike, bt.assembled_price from flowers f, bouquet_templates bt, bouquets b where bt.id == ? and bt.id = b.bouquet_template_id and f.id = b.flower_id
-sqlSelectBouquetByName=select bt.id, bt.name, f.id, f.name, f.length, f.freshness, f.price, f.petals, f.spike, bt.assembled_price from flowers f, bouquet_templates bt, bouquets b where bt.name in (?) and bt.id = b.bouquet_template_id and f.id = b.flower_id
-
+sqlSelectBouquetById=select bt.id, bt.name, f.id, f.name, f.length, f.freshness, f.price, f.petals, f.spike, bt.assembled_price, ff.flowers_price from flowers f, bouquet_templates bt, bouquets b left outer join (select sum(fls.price) flowers_price, fls.id fls_id from bouquets bqs, flowers fls where fls.id = bqs.flower_id) ff on ff.fls_id = f.id where bt.id = ? and bt.id = b.bouquet_template_id and f.id = b.flower_id;
+sqlSelectBouquetByName=select bt.id, bt.name, f.id, f.name, f.length, f.freshness, f.price, f.petals, f.spike, bt.assembled_price, ff.flowers_price from flowers f, bouquet_templates bt, bouquets b left outer join (select sum(fls.price) flowers_price, fls.id fls_id from bouquets bqs, flowers fls where fls.id = bqs.flower_id) ff on ff.fls_id = f.id where bt.name in (?) and bt.id = b.bouquet_template_id and f.id = b.flower_id;
+sqlSelectBouquetPriceById=select sum(bt.assembled_price), sum(f.price) from bouquets b, bouquet_templates bt, flowers f where b.bouquet_template_id = bt.id and f.id = b.flower_id group by f.price and bt.id = ?
+sqlSelectBouquetPriceByName=select sum(bt.assembled_price), sum(f.price) from bouquets b, bouquet_templates bt, flowers f where b.bouquet_template_id = bt.id and f.id = b.flower_id group by f.price and bt.name in (?)
 sqlDeleteFlowersFromBouquet=delete from bouquets where bouquet_template_id = ?
+
+sqlSelectBouquets=select btt.id, btt.name, ba_as_price, ba_fl_price from bouquet_templates btt left outer join (select bt.id bt_id, bt.name, sum(bt.assembled_price) ba_as_price, sum(f.price) ba_fl_price from bouquets b, bouquet_templates bt, flowers f where bt.id = b.bouquet_template_id and f.id = b.flower_id group by f.price) ba on btt.id = ba.bt_id

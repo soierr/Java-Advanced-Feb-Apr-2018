@@ -30,7 +30,7 @@ used to drop all db object when tests is finished. See [Test Strategy](./README.
 In order to supply all db related test with connection `CreateDropDbObjectsRule` has been created
 Therefore, include `@Rule` to use it or there is test `Suite` might be created with every test incorporated so
 `@ClassRule` may be used to avoid connection creation every time a `@Test` launched. In that case you
-need to be aware that have all the needed data for tests, which might be deleted previously 
+need to be aware that you have all the data needed for tests, which might be deleted previously 
 
 `CreateDropDbObjectsRule` creates db from scratch using `sql-ddl-create.txt` located in `resource` then the
 sample data inserted with help of `sql-dml-sample.txt`. Eventually, `flowegarden-dev.db` is created.
@@ -38,5 +38,27 @@ sample data inserted with help of `sql-dml-sample.txt`. Eventually, `flowegarden
 
 
 ### Application Launching
+
+To run the application invoke `java -jar flowergarden-1.0.jar` from project root folder
+
+Example output:
+
+    ********************************************************************************************
+    
+                                      Flower Garden Application
+    
+                      Application is for flower bouquets managing and viewing
+    
+    ********************************************************************************************
+    
+    
+    ------------------------------------------------------------------------------
+    
+    | Id  |      Name      |   Price of assembling    |       Total Price        |
+    
+    ------------------------------------------------------------------------------
+    |  1  |   First Date   |           105            |           555            |
+    |  2  |    Wedding     |            0             |            0             |
+    ------------------------------------------------------------------------------
 
 If DB sample data or/and `flowegarden.db` has been lost run `CreateDbAndSampleData` to recreate it

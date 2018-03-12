@@ -22,6 +22,7 @@ import org.mockito.stubbing.Answer;
 
 import com.flowergarden.bouquet.Bouquet;
 import com.flowergarden.bouquet.Bouquet2;
+import com.flowergarden.bouquet.Price;
 import com.flowergarden.dao.impl.DaoBouquetImpl;
 import com.flowergarden.dao.impl.DaoBouquetTemplateImpl;
 import com.flowergarden.dao.model.BouquetImpl;
@@ -115,6 +116,7 @@ public class DaoBouquetTest {
 		
 		Assert.assertTrue("First Date".equals(bouquet.getName()));
 		Assert.assertTrue(bouquetOld.getPrice() != 0);
+		Assert.assertTrue(bouquetOld.getPrice() == bouquet.getPriceDetailed().getPriceTotal()/100);
 		
 	}
 
@@ -127,6 +129,7 @@ public class DaoBouquetTest {
 		
 		Assert.assertTrue("First Date".equals(bouquet.getName()));
 		Assert.assertTrue(bouquetOld.getPrice() != 0);
+		Assert.assertTrue(bouquetOld.getPrice() == bouquet.getPriceDetailed().getPriceTotal()/100);
 		
 	}
 	
@@ -157,8 +160,33 @@ public class DaoBouquetTest {
 		
 		daoBouquet.deleteBouquet(bouquetId);
 
-		Assert.assertNull(daoBouquet.getBouquet("First Date"));
+		Assert.assertNull(daoBouquet.getBouquet("First Date"));		
+	}
+	
+	@Test
+	public void getBouquetPriceByIdTest(){
 		
+		Price price = daoBouquet.getBouquetPrice(1);
+		
+		Assert.assertTrue(price.getPriceAssembling() > 0);
+		Assert.assertTrue(price.getPriceTotal() > 0);
+	}
+	
+	@Test
+	public void getBouquetPriceByNameTest(){
+		
+		Price price = daoBouquet.getBouquetPrice("Wedding");
+		
+		Assert.assertTrue(price.getPriceAssembling() > 0);
+		Assert.assertTrue(price.getPriceTotal() > 0);		
+	}
+	
+	@Test
+	public void getBouquetsTest(){
+		
+		List<Bouquet2<GeneralFlower2>> bouquets = (List<Bouquet2<GeneralFlower2>>) daoBouquet.getBouquets();
+		
+		Assert.assertTrue(bouquets.get(0).getName().equals("First Date"));
 	}
 	
 }

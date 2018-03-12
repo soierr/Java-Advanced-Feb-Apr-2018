@@ -7,8 +7,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import com.flowergarden.dao.DaoDataSource;
@@ -22,8 +20,12 @@ import com.flowergarden.properties.FreshnessInteger;
  */
 public class DaoFlowerImpl implements DaoFlower{
 	
+	private String SQL_SELECT_FLOWER_BY_ID = "sqlSelectFlowerById";
+	
 	private String SQL_INSERT_FLOWER = "sqlInsertFlower";
-	private String SQL_SELECT_FLOWERS = "sqlSelectFlowers";
+	private String SQL_UPDATE_FLOWER = "sqlUpdateFlower";
+	private String SQL_DELETE_FLOWER = "sqlDeleteFlower";
+	
 	private String SQL_GET_LAST_ID = "select last_insert_rowid()";
 	
 	private DaoDataSource dataSource = null;
@@ -86,54 +88,121 @@ public class DaoFlowerImpl implements DaoFlower{
 	}
 
 	@Override
-	public void update(GeneralFlower2 oldFlower, GeneralFlower2 newFlower) {
-		// TODO Auto-generated method stub
+	public void update(GeneralFlower2 newFlower) {
+		
+		Connection conn = null;
+		
+		try{
+			
+			conn = dataSource.getConnection();
+			
+			PreparedStatement stmt = conn.prepareStatement(sql.getProperty(SQL_UPDATE_FLOWER));
+			
+			stmt.setInt(1, newFlower.getId());
+			stmt.setString(2, newFlower.getName());
+			stmt.setInt(3, newFlower.getLength());
+			stmt.setInt(4, newFlower.getFreshness().getFreshness());
+			stmt.setLong(5, newFlower.getPriceLong());
+			stmt.setInt(6, newFlower.getPetals());
+			stmt.setBoolean(7, newFlower.isSpike());
+
+			stmt.execute();
+			
+		}catch(SQLException se){
+			
+			se.printStackTrace();
+			
+		}finally{
+			
+			try{
+				conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}
+		}
 		
 	}
 	
 
 	@Override
-	public void delete(GeneralFlower2 flower) {
-		// TODO Auto-generated method stub
+	public void delete(int flowerId) {
+		
+		Connection conn = null;
+		
+		try{
+			
+			conn = dataSource.getConnection();
+			
+			PreparedStatement stmt = conn.prepareStatement(sql.getProperty(SQL_DELETE_FLOWER));
+			
+			stmt.setInt(1, flowerId);
+			stmt.execute();
+			
+		}catch(SQLException se){
+			
+			se.printStackTrace();
+			
+		}finally{
+			
+			try{
+				conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}
+		}
 		
 	}
 	
 	@Override
-	public List<GeneralFlower2> getFlowers() {
+	public GeneralFlower2 getFlower(int flowerId) {
 		
-		List<GeneralFlower2> listFlowers = null;
+		Connection conn = null;
 		
-		try(PreparedStatement stmt = dataSource.getConnection().prepareStatement(sql.getProperty(SQL_SELECT_FLOWERS))){
+		GeneralFlower2 flower = null;
+		
+		try{
 			
+			conn = dataSource.getConnection();
+			
+			PreparedStatement stmt = conn.prepareStatement(sql.getProperty(SQL_SELECT_FLOWER_BY_ID));
+			
+			stmt.setInt(1, flowerId);
 			stmt.execute();
-			ResultSet rs = stmt.getResultSet();
-			listFlowers = new ArrayList<GeneralFlower2>();
-			int i = 1;
 			
-			while(rs.next()){
+			ResultSet rs = stmt.getResultSet();
+			int i = 1;
 				
-				GeneralFlower2 flower = new GeneralFlower2();
-					
-				flower.setId(rs.getInt(i++));
-				flower.setName(rs.getString(i++));
-				flower.setLength(rs.getInt(i++));
-				flower.setFreshness(new FreshnessInteger(rs.getInt(i++)));
-				flower.setPriceLong(rs.getLong(i++));
-				flower.setPetals(rs.getInt(i++));
-				flower.setSpike(rs.getBoolean(i++));
-				i=1;
+			if(!rs.next()){
 				
-				listFlowers.add(flower);
+				return null;
 			}
+			
+			 flower = new GeneralFlower2();
+				
+			flower.setId(rs.getInt(i++));
+			flower.setName(rs.getString(i++));
+			flower.setLength(rs.getInt(i++));
+			flower.setFreshness(new FreshnessInteger(rs.getInt(i++)));
+			flower.setPriceLong(rs.getLong(i++));
+			flower.setPetals(rs.getInt(i++));
+			flower.setSpike(rs.getBoolean(i++));
 			
 			
 		}catch(SQLException se){
 			
 			se.printStackTrace();
 			
+		}finally{
+			
+			try{
+				conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}
+			
 		}
 		
-		return listFlowers;
+		return flower;
 	}
 
 }

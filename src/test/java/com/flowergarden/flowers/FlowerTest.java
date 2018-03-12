@@ -25,7 +25,11 @@ public class FlowerTest {
 	@Before
 	public void createFlower(){
 		
-		rose = new Rose(true, 85, etalonPrice, new FreshnessInteger(89));		
+		int length = 85;
+		boolean spike = true;
+				
+		
+		rose = new Rose(spike, length, etalonPrice, new FreshnessInteger(89));		
 	}
 	
 	@Test

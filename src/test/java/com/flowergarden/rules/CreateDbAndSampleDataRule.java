@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.FileSystemException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.sql.Connection;
@@ -42,6 +43,11 @@ public class CreateDbAndSampleDataRule extends ExternalResource{
 		}catch(NoSuchFileException nsfe){
 			
 			System.out.println("File not found. It's ok, moving on to the next step");
+			
+		}catch(FileSystemException fse){
+			
+			System.out.println("The file " + DB_NAME_SQLITE + " is busy by other application. Cannont recreate it");
+			return;
 		}
 		
 		conn = DriverManager.getConnection(url);
@@ -75,6 +81,11 @@ public class CreateDbAndSampleDataRule extends ExternalResource{
 	public void after(){
 		
 		try{
+			
+			if(conn == null){
+				
+				return;
+			}
 			
 			if(!conn.isClosed()){
 				

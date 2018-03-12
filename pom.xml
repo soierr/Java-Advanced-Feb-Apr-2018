@@ -4,7 +4,7 @@
 
 	<groupId>com</groupId>
 	<artifactId>flowergarden</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<packaging>jar</packaging>
 
 	<name>flowergarden</name>
@@ -32,6 +32,11 @@
 			<version>2.7.22</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>3.6</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -55,9 +60,59 @@
 					</includes>
 				</configuration>
 			</plugin>
+		      <plugin>
+		        <artifactId>maven-jar-plugin</artifactId>
+		        <executions>
+		          <execution>
+		            <id>default-jar</id>
+		            <phase>never</phase>
+		            <configuration>
+		              <finalName>unwanted</finalName>
+		              <classifier>unwanted</classifier>
+		            </configuration>
+		          </execution>
+		        </executions>
+		      </plugin>
+		      <plugin>
+		        <artifactId>maven-install-plugin</artifactId>
+		        <executions>
+		          <execution>
+		            <id>default-install</id>
+		            <phase>never</phase>
+		            <configuration>
+		              <finalName>unwanted</finalName>
+		              <classifier>unwanted</classifier>
+		            </configuration>
+		          </execution>
+		        </executions>
+		      </plugin>
+			 <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+				    <finalName>flowergarden</finalName>
+					<descriptors>
+						<descriptor>/resources/config-jar.xml</descriptor>
+					</descriptors>
+					<archive>
+						<manifest>
+							<mainClass>com.flowergarden.run.Run</mainClass>
+						</manifest>
+					</archive>
+					<outputDirectory>.</outputDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+				</plugin>
 		</plugins>
 		<pluginManagement>
-
 		</pluginManagement>
 	</build>
 

@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.flowergarden.bouquet.Bouquet2;
+import com.flowergarden.bouquet.Price;
 import com.flowergarden.flowers.GeneralFlower2;
 
 /**
@@ -25,6 +26,8 @@ public class BouquetImpl implements Bouquet2<GeneralFlower2>{
 	
 	private List<GeneralFlower2> listFlowers = new ArrayList<GeneralFlower2>();
 	
+	private Price priceDetailed = new Price();
+	
 	/**
 	 * 
 	 */
@@ -35,9 +38,15 @@ public class BouquetImpl implements Bouquet2<GeneralFlower2>{
 	}
 	
 	@Override
-	public long getPriceAssembling() {
+	public Price getPriceDetailed() {
 		
-		return this.priceAssembling;
+		return priceDetailed;
+	}
+	
+	public void setPriceDetailed(Price price){
+
+		this.priceDetailed = price;
+		this.priceAssembling = price.getPriceAssembling();
 	}
 
 	 
@@ -46,26 +55,17 @@ public class BouquetImpl implements Bouquet2<GeneralFlower2>{
 
 		return this.name;
 	}
-	
-	/*We decide to return price as accurate as possible
-	 *offering to client to decide how to round it*/
-	@Override
-	public long getPriceTotal() {
 		
-		return calculatePrice();
-	}
-
-	
 	@Override
 	public float getPrice() {
 	
 		/*Trying to fix rounding problem of inherited getPrice*/
-		return calculatePrice()/100;
+		return (calculatePriceFlowers()+priceAssembling)/100;
 	}
 	
-	private long calculatePrice(){
+	private long calculatePriceFlowers(){
 		
-		long price = priceAssembling;
+		long price = 0L;
 		
 		for (GeneralFlower2 flower : listFlowers) {
 			
@@ -87,28 +87,19 @@ public class BouquetImpl implements Bouquet2<GeneralFlower2>{
 		
 		this.listFlowers = list;
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.flowergarden.bouquet.Bouquet#getFlowers()
-	 */
+
 	@Override
 	public Collection<GeneralFlower2> getFlowers() {
 		// TODO Auto-generated method stub
 		return listFlowers;
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.flowergarden.bouquet.Bouquet#sortByFreshness()
-	 */
+
 	@Override
 	public void sortByFreshness() {
 	
 		Collections.sort(listFlowers);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.flowergarden.bouquet.Bouquet#searchFlowersByLenght(int, int)
-	 */
+
 	@Override
 	public Collection<GeneralFlower2> searchFlowersByLenght(int start, int end) {
 		

@@ -7,14 +7,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import com.flowergarden.bouquet.Bouquet;
 import com.flowergarden.bouquet.Bouquet2;
+import com.flowergarden.bouquet.Price;
 import com.flowergarden.dao.DaoBouquet;
 import com.flowergarden.dao.DaoDataSource;
 import com.flowergarden.dao.model.BouquetImpl;
+import com.flowergarden.flowers.GeneralFlower;
 import com.flowergarden.flowers.GeneralFlower2;
 import com.flowergarden.properties.FreshnessInteger;
 
@@ -30,6 +34,11 @@ public class DaoBouquetImpl implements DaoBouquet{
 	private String SQL_DELETE_FLOWERS_FROM_BOUQUET = "sqlDeleteFlowersFromBouquet";
 	private String SQL_DELETE_BOUQUET_TEMPLATE = "sqlDeleteBouquetTemplate";
 	private String SQL_GET_LAST_ID = "select last_insert_rowid()";
+	
+	private String SQL_SELECT_BOUQUET_PRICE_BY_ID = "sqlSelectBouquetPriceById";
+	private String SQL_SELECT_BOUQUET_PRICE_BY_NAME = "sqlSelectBouquetPriceByName";
+	
+	private String SQL_SELECT_BOUQUETS = "sqlSelectBouquets";
 	
 	private DaoDataSource dataSource = null;
 	
@@ -101,6 +110,8 @@ public class DaoBouquetImpl implements DaoBouquet{
 		
 		Connection conn = dataSource.getConnection();
 		
+		Bouquet2<GeneralFlower2> bouquet = null;
+		
 		ResultSet rs = null;
 		
 		try{
@@ -109,14 +120,23 @@ public class DaoBouquetImpl implements DaoBouquet{
 			stmt.setInt(1, id);
 			
 			stmt.execute();
-			rs = stmt.getResultSet();
+			rs = stmt.getResultSet();			
+			bouquet = getBouquet(rs);
 			
 		}catch(SQLException se){
 			
-			se.printStackTrace();			
+			se.printStackTrace();
+			
+		}finally{
+			
+			try{
+				conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}
 		}
 		
-		return getBouquet(rs);
+		return bouquet;
 
 	}
 
@@ -167,7 +187,7 @@ public class DaoBouquetImpl implements DaoBouquet{
 			}
 			
 			bouquet = new BouquetImpl(rs.getInt(1), rs.getString(2));
-			
+			((BouquetImpl)bouquet).setPriceDetailed(new Price(rs.getLong(10), rs.getLong(11)));
 			GeneralFlower2 flower = null;
 			
 			do{
@@ -284,5 +304,125 @@ public class DaoBouquetImpl implements DaoBouquet{
 		}
 		
 	}
+
+	@Override
+	public Price getBouquetPrice(int id) {
+		
+		Connection conn = dataSource.getConnection();
+		ResultSet rs = null;
+		Price price = null;
+
+		try{
+			
+			PreparedStatement stmt = conn.prepareStatement(sql.getProperty(SQL_SELECT_BOUQUET_PRICE_BY_ID));
+			stmt.setInt(1, id);			
+			stmt.execute();
+			rs = stmt.getResultSet();
+			
+			if(!rs.next()){
+				
+				return null;
+			}
+			
+			price = new Price(rs.getLong(1), rs.getLong(2));
+			
+		}catch(SQLException se){
+			
+			se.printStackTrace();			
+		}finally{
+			
+			try{
+				conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}
+		}
+		
+		return price;
+	}
 	
+	@Override
+	public Price getBouquetPrice(String name) {
+
+		
+		Connection conn = dataSource.getConnection();
+		ResultSet rs = null;
+		Price price = null;
+
+		try{
+			
+			PreparedStatement stmt = conn.prepareStatement(sql.getProperty(SQL_SELECT_BOUQUET_PRICE_BY_NAME));
+			stmt.setString(1, name);			
+			stmt.execute();
+			rs = stmt.getResultSet();
+			
+			if(!rs.next()){
+				
+				return null;
+			}
+			
+			price = new Price(rs.getLong(1), rs.getLong(2));
+			
+		}catch(SQLException se){
+			
+			se.printStackTrace();			
+		}finally{
+			
+			try{
+				conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}
+		}
+		
+		return price;
+	}
+
+	@Override
+	public List<? extends Bouquet<? extends GeneralFlower>> getBouquets() {
+		
+		Connection conn = dataSource.getConnection();
+		ResultSet rs = null;
+		List<Bouquet2<GeneralFlower2>> bouquets = null;
+		try{
+			
+			PreparedStatement stmt = conn.prepareStatement(sql.getProperty(SQL_SELECT_BOUQUETS));			
+			stmt.execute();
+			rs = stmt.getResultSet();
+			
+			if(!rs.next()){
+				
+				return null;
+			}
+			
+			bouquets = new ArrayList<>();
+			
+			BouquetImpl bouquet = null;
+			Price price = null;
+			
+			do{
+				
+				
+				
+				bouquet = new BouquetImpl(rs.getInt(1), rs.getString(2));
+				price = new Price(rs.getLong(3), rs.getLong(4));
+				bouquet.setPriceDetailed(price);
+				bouquets.add(bouquet);
+				
+			}while(rs.next());
+			
+		}catch(SQLException se){
+			
+			se.printStackTrace();			
+		}finally{
+			
+			try{
+				conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}
+		}
+
+		return bouquets;
+	}
 }

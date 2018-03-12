@@ -13,8 +13,7 @@ public interface Bouquet2<T extends GeneralFlower2> extends Bouquet<T>{
 
 	//TODO Move comments
 	/*This method is supposed to replace getPrice with float return type*/
-	public long getPriceTotal();	
-	public long getPriceAssembling();
+	public Price getPriceDetailed();
 	public String getName();
 	
 }
