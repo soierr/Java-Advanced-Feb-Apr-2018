@@ -14,12 +14,19 @@ import com.flowergarden.dao.DaoDataSource;
  *
  */
 public class DaoDataSourceSqlLiteImpl implements DaoDataSource{
+
 	
-	private final String DB_NAME_SQLITE = "flowergarden.db";
-	
-	private String url = "jdbc:sqlite:" + DB_NAME_SQLITE;
+	private final String url;
 	
 	Connection conn = null;
+	
+	/**
+	 * 
+	 */
+	public DaoDataSourceSqlLiteImpl(String url) {
+
+		this.url = url;
+	}
 	
 	public Connection getConnection(){
 		
