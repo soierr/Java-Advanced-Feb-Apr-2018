@@ -49,7 +49,7 @@ public class DaoFlowerTest {
 	}
 	
 	@Test
-	public void createFlowerTest(){
+	public void createTest(){
 		
 		GeneralFlower2 flower = new GeneralFlower2();
 		flower.setFreshness(new FreshnessInteger(95));
@@ -71,7 +71,7 @@ public class DaoFlowerTest {
 	}
 	
 	@Test
-	public void updateFlowerTest(){
+	public void updateTest(){
 		
 		int lengthOriginal = 95;		
 		int lengthUpdated = 90;
@@ -107,7 +107,7 @@ public class DaoFlowerTest {
 	}
 	
 	@Test
-	public void deleteFlowerTest(){
+	public void deleteTest(){
 		
 		Assert.assertTrue(daoFlower.getFlower(1) != null);
 		

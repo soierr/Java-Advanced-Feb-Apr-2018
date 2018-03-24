@@ -31,9 +31,8 @@ public class BouquetImpl implements Bouquet2<GeneralFlower2>{
 	/**
 	 * 
 	 */
-	public BouquetImpl(int id, String name) {
-		
-		this.id = id;
+	public BouquetImpl(String name) {
+
 		this.name = name;
 	}
 	
@@ -60,7 +59,7 @@ public class BouquetImpl implements Bouquet2<GeneralFlower2>{
 	public float getPrice() {
 	
 		/*Trying to fix rounding problem of inherited getPrice*/
-		return (calculatePriceFlowers()+priceAssembling)/100;
+		return (calculatePriceFlowers()+priceAssembling)/100f;
 	}
 	
 	private long calculatePriceFlowers(){
@@ -119,5 +118,21 @@ public class BouquetImpl implements Bouquet2<GeneralFlower2>{
 	public int getId() {
 		return id;
 	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	
 	
 }

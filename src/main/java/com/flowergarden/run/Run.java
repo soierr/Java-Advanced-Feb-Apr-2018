@@ -12,7 +12,6 @@ import com.flowergarden.dao.DaoBouquet;
 import com.flowergarden.dao.DaoDataSource;
 import com.flowergarden.dao.impl.DaoBouquetImpl;
 import com.flowergarden.dao.impl.DaoDataSourceSqlLiteImpl;
-import com.flowergarden.dao.model.BouquetImpl;
 import com.flowergarden.flowers.GeneralFlower2;
 import com.flowergarden.output.OutputSpaceInt;
 import com.flowergarden.output.OutputSpaceScreenImpl;
@@ -42,7 +41,7 @@ public class Run {
 		
 		OutputSpaceInt output = new OutputSpaceScreenImpl();
 				
-		List<BouquetImpl> bouquets = (List<BouquetImpl>) daoBouquet.getBouquets();
+		List<Bouquet2<GeneralFlower2>> bouquets = (List<Bouquet2<GeneralFlower2>>) daoBouquet.getBouquets();
 		
 		output.printHello();
 		output.printBouquets(bouquets);

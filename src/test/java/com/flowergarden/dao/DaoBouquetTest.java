@@ -7,11 +7,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,9 +22,7 @@ import com.flowergarden.bouquet.Bouquet;
 import com.flowergarden.bouquet.Bouquet2;
 import com.flowergarden.bouquet.Price;
 import com.flowergarden.dao.impl.DaoBouquetImpl;
-import com.flowergarden.dao.impl.DaoBouquetTemplateImpl;
 import com.flowergarden.dao.model.BouquetImpl;
-import com.flowergarden.dao.model.BouquetTemplate;
 import com.flowergarden.flowers.GeneralFlower;
 import com.flowergarden.flowers.GeneralFlower2;
 
@@ -45,8 +41,6 @@ public class DaoBouquetTest {
 	
 	DaoBouquet daoBouquet = null;
 	
-	DaoBouquetTemplate daoBouquetTemplate = null;
-	
 	DaoDataSource dataSource = mock(DaoDataSource.class);
 	
 	@Before
@@ -62,19 +56,16 @@ public class DaoBouquetTest {
 			}
 		});
 		
-		daoBouquet = new DaoBouquetImpl(dataSource, createDropDbObjectsRule.getSqlScripts());
-		daoBouquetTemplate = new DaoBouquetTemplateImpl(dataSource, createDropDbObjectsRule.getSqlScripts()); 
+		daoBouquet = new DaoBouquetImpl(dataSource, createDropDbObjectsRule.getSqlScripts()); 
 		
 	}
 	
 	@Test
-	public void createBouquetTest(){
+	public void createTest(){
 		
-		BouquetTemplate bt = new BouquetTemplate();
-		bt.setName("First Date");
-		bt.setPriceAssembling(150);
-		
-		int templateId = daoBouquetTemplate.createBouquetTemplate(bt);
+		BouquetImpl bouquet = new BouquetImpl("First Date");
+
+		bouquet.setPriceDetailed(new Price(150L));
 		
 		GeneralFlower2 rose = new GeneralFlower2();
 		rose.setFreshness(new FreshnessInteger(90));
@@ -97,12 +88,12 @@ public class DaoBouquetTest {
 		tulip.setName("Tulip");
 		tulip.setPriceLong(75L);
 		
-		List<GeneralFlower2> listFlowers = new ArrayList<GeneralFlower2>();
-		listFlowers.add(rose);
-		listFlowers.add(carnation);
-		listFlowers.add(tulip);
+		
+		bouquet.addFlower(rose);
+		bouquet.addFlower(carnation);
+		bouquet.addFlower(tulip);
 				
-		int bouquetId = daoBouquet.createBouquet(templateId, listFlowers);
+		int bouquetId = daoBouquet.create(bouquet);
 		
 		Assert.assertTrue(bouquetId > 0);
 	}
@@ -116,7 +107,7 @@ public class DaoBouquetTest {
 		
 		Assert.assertTrue("First Date".equals(bouquet.getName()));
 		Assert.assertTrue(bouquetOld.getPrice() != 0);
-		Assert.assertTrue(bouquetOld.getPrice() == bouquet.getPriceDetailed().getPriceTotal()/100);
+		Assert.assertTrue(bouquetOld.getPrice() == bouquet.getPriceDetailed().getPriceTotal()/100f);
 		
 	}
 
@@ -129,12 +120,12 @@ public class DaoBouquetTest {
 		
 		Assert.assertTrue("First Date".equals(bouquet.getName()));
 		Assert.assertTrue(bouquetOld.getPrice() != 0);
-		Assert.assertTrue(bouquetOld.getPrice() == bouquet.getPriceDetailed().getPriceTotal()/100);
+		Assert.assertTrue(bouquetOld.getPrice() == bouquet.getPriceDetailed().getPriceTotal()/100f);
 		
 	}
 	
 	@Test
-	public void updateBouquetTest(){
+	public void updateTest(){
 		
 		Bouquet2<GeneralFlower2> bouquet = (Bouquet2<GeneralFlower2>) daoBouquet.getBouquet("First Date");
 		
@@ -146,36 +137,39 @@ public class DaoBouquetTest {
 		it.next();
 		it.remove();
 		
-		daoBouquet.updateBouquet(((BouquetImpl)bouquet).getId(), (List<GeneralFlower2>)listFlowers);
+		daoBouquet.update(bouquet);
+		
+		/*go to db again*/
+		bouquet = (Bouquet2<GeneralFlower2>) daoBouquet.getBouquet(bouquet.getId());
 		
 		Assert.assertTrue(bouquet.getFlowers().size() == 1);
 	}
 	
 	@Test
-	public void deleteBouquetTest(){
+	public void deleteTest(){
 		
 		Bouquet2<GeneralFlower2> bouquet = (Bouquet2<GeneralFlower2>) daoBouquet.getBouquet("First Date");
 		
 		int bouquetId = ((BouquetImpl)bouquet).getId();
 		
-		daoBouquet.deleteBouquet(bouquetId);
+		daoBouquet.delete(bouquetId);
 
 		Assert.assertNull(daoBouquet.getBouquet("First Date"));		
 	}
 	
 	@Test
-	public void getBouquetPriceByIdTest(){
+	public void getPriceByIdTest(){
 		
-		Price price = daoBouquet.getBouquetPrice(1);
+		Price price = daoBouquet.getPrice(1);
 		
 		Assert.assertTrue(price.getPriceAssembling() > 0);
 		Assert.assertTrue(price.getPriceTotal() > 0);
 	}
 	
 	@Test
-	public void getBouquetPriceByNameTest(){
+	public void getPriceByNameTest(){
 		
-		Price price = daoBouquet.getBouquetPrice("Wedding");
+		Price price = daoBouquet.getPrice("Wedding");
 		
 		Assert.assertTrue(price.getPriceAssembling() > 0);
 		Assert.assertTrue(price.getPriceTotal() > 0);		
@@ -188,5 +182,4 @@ public class DaoBouquetTest {
 		
 		Assert.assertTrue(bouquets.get(0).getName().equals("First Date"));
 	}
-	
 }

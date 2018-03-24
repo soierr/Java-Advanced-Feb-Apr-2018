@@ -5,7 +5,8 @@ package com.flowergarden.output;
 
 import java.util.List;
 
-import com.flowergarden.dao.model.BouquetImpl;
+import com.flowergarden.bouquet.Bouquet2;
+import com.flowergarden.flowers.GeneralFlower2;
 
 /**
  * @author Sergey Slipchenko
@@ -18,6 +19,6 @@ public interface OutputSpaceInt {
 	
 	public void printHello();
 	
-	public void printBouquets(List<BouquetImpl> listBouquets);
+	public void printBouquets(List<Bouquet2<GeneralFlower2>> listBouquets);
 
 }

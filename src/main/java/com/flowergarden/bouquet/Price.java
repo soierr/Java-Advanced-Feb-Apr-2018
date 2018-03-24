@@ -24,6 +24,10 @@ public class Price {
 		
 	}
 	
+	public Price(long priceAssembling) {
+		this.priceAssembling = priceAssembling;
+	}
+	
 	/**
 	 * 
 	 */

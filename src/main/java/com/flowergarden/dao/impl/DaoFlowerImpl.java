@@ -55,12 +55,13 @@ public class DaoFlowerImpl implements DaoFlower{
 			PreparedStatement stmtIns = conn.prepareStatement(sql.getProperty(SQL_INSERT_FLOWER));
 			PreparedStatement stmtSel = conn.prepareStatement(SQL_GET_LAST_ID);
 			
-			stmtIns.setString(2, flower.getName());
-			stmtIns.setInt(3, flower.getLength());
-			stmtIns.setInt(4, flower.getFreshness().getFreshness());
-			stmtIns.setLong(5, flower.getPriceLong());
-			stmtIns.setInt(6, flower.getPetals());
-			stmtIns.setBoolean(7, flower.isSpike());
+			stmtIns.setString(1, flower.getName());
+			stmtIns.setInt(2, flower.getLength());
+			stmtIns.setInt(3, flower.getFreshness().getFreshness());
+			stmtIns.setLong(4, flower.getPriceLong());
+			stmtIns.setInt(5, flower.getPetals());
+			stmtIns.setBoolean(6, flower.isSpike());
+			stmtIns.setInt(7, flower.getBouquetId());
 			
 			conn.setAutoCommit(false);
 
@@ -105,6 +106,7 @@ public class DaoFlowerImpl implements DaoFlower{
 			stmt.setLong(5, newFlower.getPriceLong());
 			stmt.setInt(6, newFlower.getPetals());
 			stmt.setBoolean(7, newFlower.isSpike());
+			stmt.setInt(8, newFlower.getBouquetId());
 
 			stmt.execute();
 			
@@ -186,6 +188,7 @@ public class DaoFlowerImpl implements DaoFlower{
 			flower.setPriceLong(rs.getLong(i++));
 			flower.setPetals(rs.getInt(i++));
 			flower.setSpike(rs.getBoolean(i++));
+			flower.setBouquetId(rs.getInt(i++));
 			
 			
 		}catch(SQLException se){

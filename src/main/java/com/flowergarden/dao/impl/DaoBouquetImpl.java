@@ -28,17 +28,21 @@ import com.flowergarden.properties.FreshnessInteger;
  */
 public class DaoBouquetImpl implements DaoBouquet{
 	
+	private String SQL_INSERT_FLOWER = "sqlInsertFlower";
+	
 	private String SQL_INSERT_BOUQUET = "sqlInsertBouquet";
 	private String SQL_SELECT_BOUQUET_BY_ID = "sqlSelectBouquetById";
 	private String SQL_SELECT_BOUQUET_BY_NAME = "sqlSelectBouquetByName";
-	private String SQL_DELETE_FLOWERS_FROM_BOUQUET = "sqlDeleteFlowersFromBouquet";
-	private String SQL_DELETE_BOUQUET_TEMPLATE = "sqlDeleteBouquetTemplate";
 	private String SQL_GET_LAST_ID = "select last_insert_rowid()";
 	
 	private String SQL_SELECT_BOUQUET_PRICE_BY_ID = "sqlSelectBouquetPriceById";
 	private String SQL_SELECT_BOUQUET_PRICE_BY_NAME = "sqlSelectBouquetPriceByName";
 	
 	private String SQL_SELECT_BOUQUETS = "sqlSelectBouquets";
+	
+	private String SQL_DELETE_BOUQUET = "sqlDeleteBouquet";
+	
+	private String SQL_DELETE_FLOWERS_FROM_BOUQUET = "sqlDeleteFlowersFromBouquet";
 	
 	private DaoDataSource dataSource = null;
 	
@@ -54,38 +58,35 @@ public class DaoBouquetImpl implements DaoBouquet{
 	}
 	
 	@Override
-	public int createBouquet(int templateId, List<GeneralFlower2> listFlowers) {
+	public int create(Bouquet2<GeneralFlower2> bouquet) {
 		
-		int createdId = 0;
+		int bouquetId = 0;
 		
 		Connection conn = null;
+		
+		List<GeneralFlower2> listFlowers = (List<GeneralFlower2>) bouquet.getFlowers();
 		
 		try{
 			
 			conn = dataSource.getConnection();
+			conn.setAutoCommit(false);
 			
 			PreparedStatement stmtIns = null;
 			PreparedStatement stmtSel = null; 
 			
-			Iterator<GeneralFlower2> it = listFlowers.iterator();
+			stmtIns = conn.prepareStatement(sql.getProperty(SQL_INSERT_BOUQUET));
 			
-			while(it.hasNext()){
-				
-				stmtIns = conn.prepareStatement(sql.getProperty(SQL_INSERT_BOUQUET));
-				stmtIns.setInt(1, templateId);
-				stmtIns.setInt(2, it.next().getId());
-				stmtIns.addBatch();
-				
-			}
+			stmtIns.setString(1, bouquet.getName());
+			stmtIns.setLong(2, bouquet.getPriceDetailed().getPriceAssembling());
 			
 			stmtSel = conn.prepareStatement(SQL_GET_LAST_ID);
-						
-			conn.setAutoCommit(false);
-
-			stmtIns.executeBatch();
+			
+			stmtIns.execute();
 			stmtSel.execute();
 			
-			createdId = stmtSel.getResultSet().getInt(1);
+			bouquetId = stmtSel.getResultSet().getInt(1);
+			
+			insertFlowersWoCommit(conn, bouquetId, listFlowers);
 			
 			conn.commit();
 			
@@ -102,7 +103,7 @@ public class DaoBouquetImpl implements DaoBouquet{
 			}
 		}
 		
-		return createdId;
+		return bouquetId;
 	}
 
 	@Override
@@ -176,7 +177,9 @@ public class DaoBouquetImpl implements DaoBouquet{
 	
 	private Bouquet2<GeneralFlower2> getBouquet(ResultSet rs){
 		
-		Bouquet2<GeneralFlower2> bouquet = null;
+		BouquetImpl bouquet = null;
+		
+		int bouquetId = 0;
 		
 		try{
 			
@@ -186,24 +189,26 @@ public class DaoBouquetImpl implements DaoBouquet{
 				
 			}
 			
-			bouquet = new BouquetImpl(rs.getInt(1), rs.getString(2));
-			((BouquetImpl)bouquet).setPriceDetailed(new Price(rs.getLong(10), rs.getLong(11)));
+			bouquet = new BouquetImpl(rs.getString(2));
+			bouquet.setId((bouquetId = rs.getInt(1)));			
 			GeneralFlower2 flower = null;
 			
 			do{
 				
 				flower = new GeneralFlower2();
-				flower.setId(rs.getInt(3));
-				flower.setName(rs.getString(4));
-				flower.setLength(rs.getInt(5));
-				flower.setFreshness(new FreshnessInteger(rs.getInt(6)));
-				flower.setPriceLong(rs.getLong(7));
-				flower.setPetals(rs.getInt(8));
-				flower.setSpike(rs.getBoolean(9));
+				flower.setId(rs.getInt(4));
+				flower.setName(rs.getString(5));
+				flower.setLength(rs.getInt(6));
+				flower.setFreshness(new FreshnessInteger(rs.getInt(7)));
+				flower.setPriceLong(rs.getLong(8));
+				flower.setPetals(rs.getInt(9));
+				flower.setSpike(rs.getBoolean(10));
 				
 				bouquet.addFlower(flower);
 
 			}while(rs.next());
+			
+			bouquet.setPriceDetailed(getPrice(bouquetId));
 		
 		}catch(SQLException se){
 			
@@ -214,30 +219,21 @@ public class DaoBouquetImpl implements DaoBouquet{
 	}
 
 	@Override
-	public void updateBouquet(int templateId, List<GeneralFlower2> listFlowers) {
+	public void update(Bouquet2<GeneralFlower2> bouquet) {
 		
 		Connection conn = dataSource.getConnection();
+		
+		List<GeneralFlower2> listFlowers = (List<GeneralFlower2>)bouquet.getFlowers();
+		
+		int bouquetId = bouquet.getId();
 		
 		try{
 			
 			conn.setAutoCommit(false);
 			
-			deleteFlowerFromBouquet(conn, templateId);
+			deleteFlowersFromBouquet(conn, bouquetId);
 			
-			PreparedStatement stmtIns = null; 
-			
-			Iterator<GeneralFlower2> it = listFlowers.iterator();
-			
-			while(it.hasNext()){
-				
-				stmtIns = conn.prepareStatement(sql.getProperty(SQL_INSERT_BOUQUET));
-				stmtIns.setInt(1, templateId);
-				stmtIns.setInt(2, it.next().getId());
-				stmtIns.addBatch();
-				
-			}
-
-			stmtIns.executeBatch();
+			insertFlowersWoCommit(conn, bouquetId, listFlowers);
 		
 			conn.commit();
 			
@@ -256,8 +252,48 @@ public class DaoBouquetImpl implements DaoBouquet{
 
 	}
 	
+	private void insertFlowersWoCommit(Connection conn, int bouquetId, List<GeneralFlower2> listFlowers) {
+		
+		try{
+			
+			
+			PreparedStatement stmtIns = conn.prepareStatement(sql.getProperty(SQL_INSERT_FLOWER));
+			
+			Iterator<GeneralFlower2> it = listFlowers.iterator();
+			
+			GeneralFlower2 flower = null;
+			
+			stmtIns = conn.prepareStatement(sql.getProperty(SQL_INSERT_FLOWER));
+			
+			while(it.hasNext()){
+				
+				flower = it.next(); 
+				
+				stmtIns.setString(1, flower.getName());
+				stmtIns.setInt(2, flower.getLength());
+				stmtIns.setInt(3, flower.getFreshness().getFreshness());
+				stmtIns.setLong(4, flower.getPriceLong());
+				stmtIns.setInt(5, flower.getPetals());
+				stmtIns.setBoolean(6, flower.isSpike());
+				stmtIns.setInt(7, bouquetId);
+				
+				stmtIns.addBatch();
+				
+			}
+
+			stmtIns.executeBatch();
+
+			
+		}catch(SQLException se){
+			
+			se.printStackTrace();
+			
+		}
+
+	}
+	
 	@Override
-	public void deleteBouquet(int templateId) {
+	public void delete(int bouquetid) {
 		
 		Connection conn = dataSource.getConnection();
 		
@@ -265,11 +301,11 @@ public class DaoBouquetImpl implements DaoBouquet{
 			
 			conn.setAutoCommit(false);
 			
-			deleteFlowerFromBouquet(conn, templateId);
+			deleteFlowersFromBouquet(conn, bouquetid);
+
+			PreparedStatement stmt = conn.prepareStatement(sql.getProperty(SQL_DELETE_BOUQUET));
 			
-			PreparedStatement stmt = conn.prepareStatement(sql.getProperty(SQL_DELETE_BOUQUET_TEMPLATE));
-			
-			stmt.setInt(1, templateId);
+			stmt.setInt(1, bouquetid);
 
 			stmt.execute();
 			
@@ -289,12 +325,12 @@ public class DaoBouquetImpl implements DaoBouquet{
 		}
 	}
 	
-	private void deleteFlowerFromBouquet(Connection conn, int templateId){
+	private void deleteFlowersFromBouquet(Connection conn, int bouquetId){
 		
 		try{
 			
 			PreparedStatement stmt = conn.prepareStatement(sql.getProperty(SQL_DELETE_FLOWERS_FROM_BOUQUET));
-			stmt.setInt(1, templateId);
+			stmt.setInt(1, bouquetId);
 			
 			stmt.execute();
 			
@@ -306,7 +342,7 @@ public class DaoBouquetImpl implements DaoBouquet{
 	}
 
 	@Override
-	public Price getBouquetPrice(int id) {
+	public Price getPrice(int bouquetId) {
 		
 		Connection conn = dataSource.getConnection();
 		ResultSet rs = null;
@@ -315,7 +351,7 @@ public class DaoBouquetImpl implements DaoBouquet{
 		try{
 			
 			PreparedStatement stmt = conn.prepareStatement(sql.getProperty(SQL_SELECT_BOUQUET_PRICE_BY_ID));
-			stmt.setInt(1, id);			
+			stmt.setInt(1, bouquetId);			
 			stmt.execute();
 			rs = stmt.getResultSet();
 			
@@ -342,7 +378,7 @@ public class DaoBouquetImpl implements DaoBouquet{
 	}
 	
 	@Override
-	public Price getBouquetPrice(String name) {
+	public Price getPrice(String name) {
 
 		
 		Connection conn = dataSource.getConnection();
@@ -401,10 +437,9 @@ public class DaoBouquetImpl implements DaoBouquet{
 			Price price = null;
 			
 			do{
-				
-				
-				
-				bouquet = new BouquetImpl(rs.getInt(1), rs.getString(2));
+
+				bouquet = new BouquetImpl(rs.getString(2));
+				bouquet.setId(rs.getInt(1));
 				price = new Price(rs.getLong(3), rs.getLong(4));
 				bouquet.setPriceDetailed(price);
 				bouquets.add(bouquet);

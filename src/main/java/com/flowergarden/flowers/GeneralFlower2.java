@@ -18,6 +18,8 @@ public class GeneralFlower2 extends GeneralFlower{
 	private int petals = 0;
 	
 	private boolean spike = false;
+	
+	private int bouquetId = 0;
 
 	/**
 	 * @return the name
@@ -99,6 +101,20 @@ public class GeneralFlower2 extends GeneralFlower{
 	public final float getPrice() {
 		// TODO Auto-generated method stub
 		return super.getPrice();
+	}
+
+	/**
+	 * @return the bouquet_id
+	 */
+	public int getBouquetId() {
+		return bouquetId;
+	}
+
+	/**
+	 * @param bouquet_id the bouquet_id to set
+	 */
+	public void setBouquetId(int bouquetId) {
+		this.bouquetId = bouquetId;
 	}
 	
 }

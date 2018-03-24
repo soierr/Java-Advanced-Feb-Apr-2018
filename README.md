@@ -21,9 +21,9 @@ used to drop all db object when tests is finished. See [Test Strategy](./README.
 
 ### DB Used
 
-`flowegarden.db` - located in root of this project, used by running application
+`flowergarden.db` - located in root of this project, used by running application
   
-`flowegarden-dev.db` - temporarily used database created only for the time of running tests. See [Test Strategy](./README.md#test-strategy) &nbsp;for details
+`flowergarden-dev.db` - temporarily used database created only for the time of running tests. See [Test Strategy](./README.md#test-strategy) &nbsp;for details
 
 ### Test strategy
 
@@ -61,4 +61,4 @@ Example output:
     |  2  |    Wedding     |            0             |            0             |
     ------------------------------------------------------------------------------
 
-If DB sample data or/and `flowegarden.db` has been lost run `CreateDbAndSampleData` to recreate it
+If DB sample data or/and `flowergarden.db` has been lost run `CreateDbAndSampleData` to recreate it

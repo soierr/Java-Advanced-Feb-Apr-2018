@@ -1,5 +1,3 @@
 drop table flowers;
 
-drop table bouquet_templates;
-
 drop table bouquets;
