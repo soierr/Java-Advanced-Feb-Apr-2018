@@ -9,6 +9,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
 import com.flowergarden.dao.DaoDataSource;
 import com.flowergarden.dao.DaoFlower;
 import com.flowergarden.flowers.GeneralFlower2;
@@ -18,6 +22,7 @@ import com.flowergarden.properties.FreshnessInteger;
  * @author SOIERR
  *
  */
+@Repository("flower")
 public class DaoFlowerImpl implements DaoFlower{
 	
 	private String SQL_SELECT_FLOWER_BY_ID = "sqlSelectFlowerById";
@@ -28,13 +33,15 @@ public class DaoFlowerImpl implements DaoFlower{
 	
 	private String SQL_GET_LAST_ID = "select last_insert_rowid()";
 	
+	@Resource(type=DaoDataSource.class)
 	private DaoDataSource dataSource = null;
 	
+	@Resource(name="sqlScripts")
 	private Properties sql = null;
+
+	public DaoFlowerImpl() {
+	}
 	
-	/**
-	 * 
-	 */
 	public DaoFlowerImpl(DaoDataSource dataSource, Properties sql) {
 		
 		this.dataSource = dataSource;

@@ -12,6 +12,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
 import com.flowergarden.bouquet.Bouquet;
 import com.flowergarden.bouquet.Bouquet2;
 import com.flowergarden.bouquet.Price;
@@ -26,6 +30,7 @@ import com.flowergarden.properties.FreshnessInteger;
  * @author SOIERR
  *
  */
+@Repository("daoBouquet")
 public class DaoBouquetImpl implements DaoBouquet{
 	
 	private String SQL_INSERT_FLOWER = "sqlInsertFlower";
@@ -44,13 +49,16 @@ public class DaoBouquetImpl implements DaoBouquet{
 	
 	private String SQL_DELETE_FLOWERS_FROM_BOUQUET = "sqlDeleteFlowersFromBouquet";
 	
+	@Resource(type=DaoDataSource.class)
 	private DaoDataSource dataSource = null;
 	
+	@Resource(name="sqlScripts")
 	private Properties sql = null;
 	
-	/**
-	 * 
-	 */
+
+	public DaoBouquetImpl() {
+	}
+	
 	public DaoBouquetImpl(DaoDataSource dataSource, Properties sql) {
 	
 		this.dataSource = dataSource;

@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Repository;
 
 import com.flowergarden.bouquet.Bouquet2;
 import com.flowergarden.flowers.GeneralFlower2;
@@ -15,6 +16,7 @@ import com.flowergarden.flowers.GeneralFlower2;
  * @author Sergey Slipchenko
  *
  */
+@Repository("output")
 public class OutputSpaceScreenImpl implements OutputSpaceInt{
 	
 	private String lineHello = "********************************************************************************************";
