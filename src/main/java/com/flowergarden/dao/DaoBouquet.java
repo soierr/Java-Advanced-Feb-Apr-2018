@@ -17,21 +17,21 @@ import com.flowergarden.flowers.GeneralFlower2;
  */
 public interface DaoBouquet {
 	
-	public int create(Bouquet2<GeneralFlower2> bouquet);
+	int create(Bouquet2<GeneralFlower2> bouquet);
 	
-	public Bouquet<? extends GeneralFlower> getBouquet(int id);
+	Bouquet<? extends GeneralFlower> getBouquet(int id);
 	
-	public Bouquet<? extends GeneralFlower> getBouquet(String bouquetName);
+	Bouquet<? extends GeneralFlower> getBouquet(String bouquetName);
 	
 	/*the only flowers might be replaced with those set in input bouquet*/
-	public void update(Bouquet2<GeneralFlower2> bouquet);
+	void update(Bouquet2<GeneralFlower2> bouquet);
 	
-	public void delete(int bouquetId);
+	void delete(int bouquetId);
 	
-	public Price getPrice(int bouquetId);
+	Price getPrice(int bouquetId);
 	
-	public Price getPrice(String bouquetName);
+	Price getPrice(String bouquetName);
 	
-	public List<? extends Bouquet<? extends GeneralFlower>> getBouquets();
+	List<? extends Bouquet<? extends GeneralFlower>> getBouquets();
 
 }

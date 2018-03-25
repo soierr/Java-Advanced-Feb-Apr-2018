@@ -17,8 +17,8 @@ import com.flowergarden.flowers.GeneralFlower2;
  * he works with the application*/
 public interface OutputSpaceInt {
 	
-	public void printHello();
+	void printHello();
 	
-	public void printBouquets(List<Bouquet2<GeneralFlower2>> listBouquets);
+	void printBouquets(List<Bouquet2<GeneralFlower2>> listBouquets);
 
 }

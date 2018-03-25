@@ -11,10 +11,10 @@ import java.util.Set;
  */
 public interface BouquetRestrictedColor <T, C>{
 
-	public boolean put(T flower);
+	boolean put(T flower);
 	
-	public void setColorSet(Set<C> colorSet);
+	void setColorSet(Set<C> colorSet);
 	
-	public Set<C> getColorSet();
+	Set<C> getColorSet();
 
 }
