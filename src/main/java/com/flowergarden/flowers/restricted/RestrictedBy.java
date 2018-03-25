@@ -9,6 +9,6 @@ package com.flowergarden.flowers.restricted;
  */
 public interface RestrictedBy<P> {
 	
-	public P getParameter();
+	P getParameter();
 	
 }

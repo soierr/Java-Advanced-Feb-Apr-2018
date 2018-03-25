@@ -11,5 +11,5 @@ import java.sql.Connection;
  */
 public interface DaoDataSource {
 
-	public Connection getConnection();
+	Connection getConnection();
 }

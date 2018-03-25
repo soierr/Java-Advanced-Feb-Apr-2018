@@ -9,6 +9,6 @@ package com.flowergarden.flowers.restricted;
  */
 public interface RestrictedByColor extends RestrictedBy<FlowerRestrictedColor.COLORS>{
 	
-	public FlowerRestrictedColor.COLORS getParameter();
+	FlowerRestrictedColor.COLORS getParameter();
 	
 }
