@@ -14,10 +14,6 @@
 	
 	<util:properties id="jdbcProps" location="classpath:jdbc.properties"/>
 	
-<!-- 	<bean id="datasource" class="com.flowergarden.dao.impl.DaoDataSourceSqlLiteImpl">
-		<constructor-arg value="#{jdbcProps['jdbc.url']}"/>
-	</bean> -->
-	
 	<bean id="datasource" class="com.flowergarden.dao.impl.DaoDataSourceApachePool">
 		<constructor-arg ref="basicDataSource"/>
 	</bean>
