@@ -36,6 +36,7 @@ need to be aware that you have all the data needed for tests, which might be del
 sample data inserted with help of `sql-dml-sample.txt`. Eventually, `flowegarden-dev.db` is created.
  Once the tests are finished the rule cleans db invoking `sql-ddl-drop.txt` and removes `flowegarden-dev.db`
 
+
 ### Application Launching
 
 To run the application invoke `java -jar flowergarden-1.0.jar` from project root folder
@@ -61,14 +62,3 @@ Example output:
     ------------------------------------------------------------------------------
 
 If DB sample data or/and `flowergarden.db` has been lost run `CreateDbAndSampleData` to recreate it
-
-### Test Coverage
-
-Just pretty picture
-
-![GitHub Logo](./images/junit-out.png)
-
-Coverage percentage
-
-![GitHub Logo](./images/junit-coverage.png)
-
