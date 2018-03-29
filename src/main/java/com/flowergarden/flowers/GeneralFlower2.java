@@ -47,6 +47,7 @@ public class GeneralFlower2 extends GeneralFlower{
 	 */
 	public void setPriceLong(Long price) {
 		this.price = price;
+		super.price = price/100f;
 	}
 
 	/**

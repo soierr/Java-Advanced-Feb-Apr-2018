@@ -4,9 +4,11 @@
 package com.flowergarden.rules;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
@@ -33,6 +35,8 @@ public class CreateDropDbObjectsRule extends ExternalResource{
 	private final String DB_DDL_FILENAME_CREATE = "resources/sql-ddl-create.txt";
 	private final String DB_DDL_FILENAME_DROP = "resources/sql-ddl-drop.txt";
 	private final String DB_DML_FILENAME_SAMPLE = "resources/sql-dml-sample.txt";
+	private final String FILE_JSON_BOUQUE = "resources/bouquet.json";
+	private final String FILE_JSON_BOUQUE_ETALON = "resources/bouquet-etalon.json";
 	
 	String url = "jdbc:sqlite:" + DB_NAME_SQLITE;
 	Connection conn = null;
@@ -131,6 +135,9 @@ public class CreateDropDbObjectsRule extends ExternalResource{
 		System.out.println("Tests accomplished. See JUnit output for details");
 		System.out.println("All DB objects has been dropped");
 		System.out.println("DB removed from disk");
+
+		writeInitialBouquet();
+		System.out.println("Wrote initial bouquet to bouquet.json");
 	}
 	
 	private void performSQL(Connection conn, File file) throws IOException, SQLException{
@@ -156,6 +163,40 @@ public class CreateDropDbObjectsRule extends ExternalResource{
         }
         
         br.close();
+	}
+	
+	private void writeInitialBouquet(){
+		
+		BufferedReader br = null;
+		BufferedWriter bw = null;
+		
+		try{
+			
+			br = new BufferedReader(new FileReader(new File(FILE_JSON_BOUQUE_ETALON)));
+			bw = new BufferedWriter(new FileWriter(new File(FILE_JSON_BOUQUE)));
+			
+			bw.write(br.readLine());
+			
+		}catch(IOException fe){
+			
+			fe.printStackTrace();
+		}finally{
+			
+			try{
+				br.close();
+			}catch(IOException ioe){
+				
+				ioe.printStackTrace();
+				
+			}			
+			
+			try{
+				bw.close();
+			}catch(IOException ioe){
+				
+				ioe.printStackTrace();
+			}
+		}
 	}
 
 }

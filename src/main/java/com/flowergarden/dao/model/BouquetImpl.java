@@ -8,6 +8,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.flowergarden.bouquet.Bouquet2;
 import com.flowergarden.bouquet.Price;
 import com.flowergarden.flowers.GeneralFlower2;
@@ -16,17 +20,23 @@ import com.flowergarden.flowers.GeneralFlower2;
  * @author SOIERR
  *
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class BouquetImpl implements Bouquet2<GeneralFlower2>{
 	
 	private int id;
 	
 	private String name;
 	
-	private long priceAssembling = 0L;
-	
 	private List<GeneralFlower2> listFlowers = new ArrayList<GeneralFlower2>();
 	
 	private Price priceDetailed = new Price();
+	
+	/**
+	 * 
+	 */
+	public BouquetImpl() {
+	}
 	
 	/**
 	 * 
@@ -45,7 +55,6 @@ public class BouquetImpl implements Bouquet2<GeneralFlower2>{
 	public void setPriceDetailed(Price price){
 
 		this.priceDetailed = price;
-		this.priceAssembling = price.getPriceAssembling();
 	}
 
 	 
@@ -59,7 +68,7 @@ public class BouquetImpl implements Bouquet2<GeneralFlower2>{
 	public float getPrice() {
 	
 		/*Trying to fix rounding problem of inherited getPrice*/
-		return (calculatePriceFlowers()+priceAssembling)/100f;
+		return (calculatePriceFlowers()+priceDetailed.getPriceAssembling())/100f;
 	}
 	
 	private long calculatePriceFlowers(){

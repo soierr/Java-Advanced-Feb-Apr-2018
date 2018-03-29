@@ -211,6 +211,7 @@ public class DaoBouquetImpl implements DaoBouquet{
 				flower.setPriceLong(rs.getLong(8));
 				flower.setPetals(rs.getInt(9));
 				flower.setSpike(rs.getBoolean(10));
+				flower.setBouquetId(rs.getInt(11));
 				
 				bouquet.addFlower(flower);
 

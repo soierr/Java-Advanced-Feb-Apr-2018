@@ -7,11 +7,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.flowergarden.bouquet.Bouquet2;
 import com.flowergarden.flowers.GeneralFlower2;
-import com.flowergarden.spring.ctx.Beans;
+import com.flowergarden.run.Run;
 
 import static org.mockito.Mockito.*;
 
@@ -31,7 +30,7 @@ public class BouquetServiceTest {
 	@Before
 	public void startSprintContainer(){
 		
-		ctx = new AnnotationConfigApplicationContext(Beans.class);
+		ctx = Run.startContainer();
 		
 		when(bouquet.getPrice()).thenReturn(samplePrice);
 	}
@@ -50,6 +49,16 @@ public class BouquetServiceTest {
 		verify(bouquet).getPrice();
 		
 		Assert.assertEquals(bs.getPrice(bouquet), expectedPrice, expectedZeroDelta);
+	}
+	
+	@Test
+	public void getBouquetTest(){
+		
+		BouquetService bs = ctx.getBean("bouquetService", BouquetService.class);
+		Assert.assertNull(bs.getBouquet(3));
+		bs = ctx.getBean("bouquetService", BouquetService.class);
+		Assert.assertNotNull(bs.getBouquet(1));
+		
 	}
 
 }

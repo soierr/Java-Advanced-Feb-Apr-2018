@@ -6,8 +6,8 @@ sqlDeleteFlower=delete from flowers where id = ?
 sqlInsertBouquet=insert into bouquets(name, assemble_price) values(?,?)
 sqlDeleteBouquet=delete from bouquets where id = ?
 
-sqlSelectBouquetById=select b.id, b.name, b.assemble_price, f.id, f.name, f.length, f.freshness, f.price, f.petals, f.spike from flowers f, bouquets b where f.bouquet_id = b.id and b.id = ?
-sqlSelectBouquetByName=select b.id, b.name, b.assemble_price, f.id, f.name, f.length, f.freshness, f.price, f.petals, f.spike from flowers f, bouquets b where f.bouquet_id = b.id and b.name in (?)
+sqlSelectBouquetById=select b.id, b.name, b.assemble_price, f.id, f.name, f.length, f.freshness, f.price, f.petals, f.spike, f.bouquet_id from flowers f, bouquets b where f.bouquet_id = b.id and b.id = ?
+sqlSelectBouquetByName=select b.id, b.name, b.assemble_price, f.id, f.name, f.length, f.freshness, f.price, f.petals, f.spike, f.bouquet_id from flowers f, bouquets b where f.bouquet_id = b.id and b.name in (?)
 
 sqlSelectBouquetPriceById=select b.assemble_price, sum(f.price), f.bouquet_id from bouquets b, flowers f where b.id = f.bouquet_id and b.id = ? group by f.bouquet_id
 sqlSelectBouquetPriceByName=select b.assemble_price, sum(f.price), f.bouquet_id from bouquets b, flowers f where b.id = f.bouquet_id and b.name in (?) group by f.bouquet_id

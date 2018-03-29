@@ -14,6 +14,8 @@ import com.flowergarden.spring.ctx.Beans;
 @SuppressWarnings("unchecked")
 public class Run {
 	
+	public static ApplicationContext ctx = null;
+	
 	public static void main(String[] args){
 		
 		/*changed context container type from xml to annotation*/
@@ -28,6 +30,13 @@ public class Run {
 		output.printHello();
 		output.printBouquets(bouquets);
 		
+	}
+	
+	public static ApplicationContext startContainer(){
+		
+		ctx = new AnnotationConfigApplicationContext(Beans.class);
+		
+		return ctx;
 	}
 
 }
