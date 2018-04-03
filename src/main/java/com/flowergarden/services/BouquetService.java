@@ -4,10 +4,12 @@
 package com.flowergarden.services;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.annotation.Resource;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.stream.XMLStreamWriter;
 
@@ -17,6 +19,7 @@ import com.flowergarden.bouquet.Bouquet2;
 import com.flowergarden.dao.DaoBouquet;
 import com.flowergarden.dao.impl.DaoBouquetImpl;
 import com.flowergarden.flowers.GeneralFlower2;
+import com.flowergarden.properties.FreshnessInteger;
 
 /**
  * @author SOIERR
@@ -38,42 +41,54 @@ public class BouquetService {
 	@Resource(type=ByteArrayOutputStream.class)
 	private ByteArrayOutputStream byteOutputStream = null;
 	
-	public float getPrice(Bouquet2<GeneralFlower2> bouquet){
-		
-		return bouquet.getPrice();
-	}
-	
-	public String getBouquet(int bouquetId){
-		
-		String json = null;
+	public float getPrice(int bouquetId){
 		
 		Bouquet2<GeneralFlower2> bouquet = (Bouquet2<GeneralFlower2>) daoBouquet.getBouquet(bouquetId);
 		
 		if(bouquet == null){
 			
-			return null;
+			return -1;
 		}
 		
-		try{
-			
-			marshaller.marshal(bouquet, xmlStreamWriter);
-			
-		}catch(JAXBException je){
-			
-			je.printStackTrace();
-		}
-		
-		try{
-			byteOutputStream.flush();
-		}catch(IOException ioe){
-			
-			ioe.printStackTrace();
-		}
-		
-		 json = byteOutputStream.toString();
-		 byteOutputStream.reset();
-				
-		return json;
+		return bouquet.getPrice();
 	}
 
+	public List<GeneralFlower2> decrementFreshness(int bouquetId){
+		
+		Bouquet2<GeneralFlower2> bouquet = (Bouquet2<GeneralFlower2>) daoBouquet.getBouquet(bouquetId);
+		
+		List<GeneralFlower2> listFlowers = (List<GeneralFlower2>) bouquet.getFlowers();
+		
+		List<GeneralFlower2> listFlowersNegative = new ArrayList<>(Collections.nCopies(listFlowers.size(), null));
+		
+		int fr = 0;
+		
+		Iterator<GeneralFlower2> it = listFlowers.iterator();
+		GeneralFlower2 flower;
+		int i = 0;
+		while(it.hasNext()){
+			
+			flower = it.next();
+			
+			if((fr = flower.getFreshness().getFreshness()) > 0){				
+				flower.setFreshness(new FreshnessInteger(fr-1));
+			}else{
+				listFlowersNegative.set(i++, flower);
+			}
+		}
+		
+		daoBouquet.update(bouquet);
+		
+		return listFlowersNegative;
+	}
+	
+	public Bouquet2<GeneralFlower2> getBouquet(int bouquetId){
+		
+		return (Bouquet2<GeneralFlower2>) daoBouquet.getBouquet(bouquetId);
+	}
+	
+	public List<GeneralFlower2> getFlowers(int bouquetId){
+		
+		return (List<GeneralFlower2>)daoBouquet.getBouquet(bouquetId).getFlowers();
+	}
 }

@@ -14,6 +14,8 @@ import com.flowergarden.run.Run;
 
 import static org.mockito.Mockito.*;
 
+import java.util.List;
+
 /**
  * @author SOIERR
  *
@@ -25,31 +27,34 @@ public class BouquetServiceTest {
 	
 	Bouquet2<GeneralFlower2> bouquet = mock(Bouquet2.class);
 	
-	float samplePrice = 17;
+	//float samplePrice = 17f;
+	
+	int sampleBouquetId = 1;
 	
 	@Before
 	public void startSprintContainer(){
 		
 		ctx = Run.startContainer();
 		
-		when(bouquet.getPrice()).thenReturn(samplePrice);
+		//when(bouquet.getPrice()).thenReturn(samplePrice);
 	}
 	
-	@Test
+/*	@Test
+ *	//TODO Refactor it
 	public void getPriceTest(){
 		
 		float expectedPrice = 17;
 		
 		float expectedZeroDelta = 0;
 		
+		int sampleBouquetId = 1;
+		
 		BouquetService bs = ctx.getBean("bouquetService", BouquetService.class);
 		
-		bs.getPrice(bouquet);
+		bs.getPrice(sampleBouquetId);
 		
-		verify(bouquet).getPrice();
-		
-		Assert.assertEquals(bs.getPrice(bouquet), expectedPrice, expectedZeroDelta);
-	}
+		Assert.assertEquals(bs.getPrice(sampleBouquetId), expectedPrice, expectedZeroDelta);
+	}*/
 	
 	@Test
 	public void getBouquetTest(){
@@ -60,5 +65,44 @@ public class BouquetServiceTest {
 		Assert.assertNotNull(bs.getBouquet(1));
 		
 	}
+	
+	@Test
+	public void decrementFreshnessTest(){
+		
+		BouquetService bs = ctx.getBean("bouquetService", BouquetService.class);
+		Bouquet2<GeneralFlower2> bouquet = (Bouquet2<GeneralFlower2>) bs.getBouquet(sampleBouquetId);
+		
+		int initialFreshnessTotal = 0;
+		
+		List<GeneralFlower2> listFlowers = (List<GeneralFlower2>) bouquet.getFlowers();
+		
+		for(GeneralFlower2 flower : listFlowers){
+			
+			initialFreshnessTotal += flower.getFreshness().getFreshness();
+			//flower.setFreshness(new FreshnessInteger(flower.getFreshness().getFreshness()-1));
+		}
+		
+		/*we assume that all current sample flowers has freshness > 0*/		
+		List<GeneralFlower2> lisrFlowerNegative = bs.decrementFreshness(bouquet.getId());
+		
+		/*we return collections with size equals to size of list flowers of current bouquet
+		 * initially it's initalized with nulls. not null means flower has current freshnes 0*/
+		Assert.assertTrue(lisrFlowerNegative.indexOf(null) == 0);
+		
+		int changedFreshnessTotal = 0;
+		
+		bouquet = (Bouquet2<GeneralFlower2>) bs.getBouquet(bouquet.getId());
+		
+		listFlowers = (List<GeneralFlower2>) bouquet.getFlowers();
+		
+		for(GeneralFlower2 flower : listFlowers){
+			
+			changedFreshnessTotal += flower.getFreshness().getFreshness();
+		}
+		
+		/*as requirement states we need decrement freshness of every flowers in bouquet*/
+		Assert.assertTrue(initialFreshnessTotal == changedFreshnessTotal + listFlowers.size());;
+	}
+	
 
 }

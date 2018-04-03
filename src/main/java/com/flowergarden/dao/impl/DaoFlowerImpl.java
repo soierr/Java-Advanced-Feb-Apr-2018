@@ -22,7 +22,7 @@ import com.flowergarden.properties.FreshnessInteger;
  * @author SOIERR
  *
  */
-@Repository("flower")
+@Repository("daoFlower")
 public class DaoFlowerImpl implements DaoFlower{
 	
 	private String SQL_SELECT_FLOWER_BY_ID = "sqlSelectFlowerById";

@@ -3,10 +3,16 @@
  */
 package com.flowergarden.flowers;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * @author SOIERR
  *
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class GeneralFlower2 extends GeneralFlower{
 	
 	private int id;
