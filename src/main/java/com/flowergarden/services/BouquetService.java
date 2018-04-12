@@ -5,7 +5,6 @@ package com.flowergarden.services;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -20,6 +19,7 @@ import com.flowergarden.dao.DaoBouquet;
 import com.flowergarden.dao.impl.DaoBouquetImpl;
 import com.flowergarden.flowers.GeneralFlower2;
 import com.flowergarden.properties.FreshnessInteger;
+import com.flowergarden.services.ResponseBouquetFreshness.RESULT;
 
 /**
  * @author SOIERR
@@ -53,33 +53,61 @@ public class BouquetService {
 		return bouquet.getPrice();
 	}
 
-	public List<GeneralFlower2> decrementFreshness(int bouquetId){
+	public ResponseBouquetFreshness decrementFreshness(int bouquetId){
 		
 		Bouquet2<GeneralFlower2> bouquet = (Bouquet2<GeneralFlower2>) daoBouquet.getBouquet(bouquetId);
 		
-		List<GeneralFlower2> listFlowers = (List<GeneralFlower2>) bouquet.getFlowers();
+		if(bouquet == null){
+			
+			return new ResponseBouquetFreshness(RESULT.NOT_FOUND);
+		}
 		
-		List<GeneralFlower2> listFlowersNegative = new ArrayList<>(Collections.nCopies(listFlowers.size(), null));
+		List<GeneralFlower2> listFlowers = (List<GeneralFlower2>) bouquet.getFlowers();
+
+		List<GeneralFlower2> listFlowersUpdated = new ArrayList<>();
+		List<GeneralFlower2> listFlowersZeroPrice = new ArrayList<>();
 		
 		int fr = 0;
 		
 		Iterator<GeneralFlower2> it = listFlowers.iterator();
 		GeneralFlower2 flower;
-		int i = 0;
+
 		while(it.hasNext()){
 			
 			flower = it.next();
 			
 			if((fr = flower.getFreshness().getFreshness()) > 0){				
 				flower.setFreshness(new FreshnessInteger(fr-1));
+				listFlowersUpdated.add(flower);
 			}else{
-				listFlowersNegative.set(i++, flower);
+				listFlowersZeroPrice.add(flower);
 			}
 		}
 		
-		daoBouquet.update(bouquet);
+		ResponseBouquetFreshness response = new ResponseBouquetFreshness();
 		
-		return listFlowersNegative;
+		ResponseBouquetFreshness.RESULT res = null;
+		
+		if(listFlowersUpdated.size() == listFlowers.size()){
+			
+			res = RESULT.OK_ALL;
+			
+		}else if(listFlowersZeroPrice.size() == listFlowers.size()){
+			
+			res = RESULT.NOK_ALL;
+			
+		}else if(!listFlowersZeroPrice.isEmpty()){
+			
+			res = RESULT.OK_SPECIFIC;
+		}
+			
+		response.setResult(res);
+		response.setListFlowersUpdated(listFlowersUpdated);
+		response.setListFlowersZeroPrice(listFlowersZeroPrice);
+
+		daoBouquet.updateAndAdd(bouquet);
+		
+		return response;
 	}
 	
 	public Bouquet2<GeneralFlower2> getBouquet(int bouquetId){
@@ -89,6 +117,8 @@ public class BouquetService {
 	
 	public List<GeneralFlower2> getFlowers(int bouquetId){
 		
-		return (List<GeneralFlower2>)daoBouquet.getBouquet(bouquetId).getFlowers();
+		Bouquet2<GeneralFlower2> bouquet = (Bouquet2<GeneralFlower2>) daoBouquet.getBouquet(bouquetId);
+		
+		return bouquet == null ? null : (List<GeneralFlower2>)daoBouquet.getBouquet(bouquetId).getFlowers();
 	}
 }

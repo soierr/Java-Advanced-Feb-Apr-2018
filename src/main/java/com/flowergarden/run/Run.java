@@ -9,7 +9,7 @@ import com.flowergarden.bouquet.Bouquet2;
 import com.flowergarden.dao.DaoBouquet;
 import com.flowergarden.flowers.GeneralFlower2;
 import com.flowergarden.output.OutputSpaceInt;
-import com.flowergarden.spring.ctx.Beans;
+import com.flowergarden.spring.ctx.BeanContainer;
 
 @SuppressWarnings("unchecked")
 public class Run {
@@ -19,7 +19,7 @@ public class Run {
 	public static void main(String[] args){
 		
 		/*changed context container type from xml to annotation*/
-		ApplicationContext ctx = new AnnotationConfigApplicationContext(Beans.class);
+		ApplicationContext ctx = new AnnotationConfigApplicationContext(BeanContainer.class);
 		
 		DaoBouquet daoBouquet = ctx.getBean("daoBouquet", DaoBouquet.class);
 		
@@ -34,7 +34,7 @@ public class Run {
 	
 	public static ApplicationContext startContainer(){
 		
-		ctx = new AnnotationConfigApplicationContext(Beans.class);
+		ctx = new AnnotationConfigApplicationContext(BeanContainer.class);
 		
 		return ctx;
 	}

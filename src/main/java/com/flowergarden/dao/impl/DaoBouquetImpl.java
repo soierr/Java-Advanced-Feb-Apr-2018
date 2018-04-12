@@ -47,6 +47,8 @@ public class DaoBouquetImpl implements DaoBouquet{
 	
 	private String SQL_DELETE_BOUQUET = "sqlDeleteBouquet";
 	
+	private String SQL_UPDATE_FLOWER = "sqlUpdateFlower";
+	
 	private String SQL_DELETE_FLOWERS_FROM_BOUQUET = "sqlDeleteFlowersFromBouquet";
 	
 	@Resource(type=DaoDataSource.class)
@@ -261,6 +263,38 @@ public class DaoBouquetImpl implements DaoBouquet{
 
 	}
 	
+	@Override
+	public void updateAndAdd(Bouquet2<GeneralFlower2> bouquet) {
+		
+		Connection conn = dataSource.getConnection();
+		
+		List<GeneralFlower2> listFlowers = (List<GeneralFlower2>)bouquet.getFlowers();
+		
+		int bouquetId = bouquet.getId();
+		
+		try{
+			
+			conn.setAutoCommit(false);
+		
+			updateFlowersWoCommit(conn, bouquetId, listFlowers);
+		
+			conn.commit();
+			
+		}catch(SQLException se){
+			
+			se.printStackTrace();
+			
+		}finally{
+			
+			try{
+				conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}
+		}
+		
+	}
+	
 	private void insertFlowersWoCommit(Connection conn, int bouquetId, List<GeneralFlower2> listFlowers) {
 		
 		try{
@@ -271,8 +305,6 @@ public class DaoBouquetImpl implements DaoBouquet{
 			Iterator<GeneralFlower2> it = listFlowers.iterator();
 			
 			GeneralFlower2 flower = null;
-			
-			stmtIns = conn.prepareStatement(sql.getProperty(SQL_INSERT_FLOWER));
 			
 			while(it.hasNext()){
 				
@@ -291,6 +323,45 @@ public class DaoBouquetImpl implements DaoBouquet{
 			}
 
 			stmtIns.executeBatch();
+
+			
+		}catch(SQLException se){
+			
+			se.printStackTrace();
+			
+		}
+
+	}
+	
+	private void updateFlowersWoCommit(Connection conn, int bouquetId, List<GeneralFlower2> listFlowers) {
+		
+		try{
+			
+			
+			PreparedStatement stmtUpd = conn.prepareStatement(sql.getProperty(SQL_UPDATE_FLOWER));
+			
+			Iterator<GeneralFlower2> it = listFlowers.iterator();
+			
+			GeneralFlower2 flower = null;
+			
+			while(it.hasNext()){
+				
+				flower = it.next(); 
+				
+				stmtUpd.setInt(1, flower.getId());
+				stmtUpd.setString(2, flower.getName());
+				stmtUpd.setInt(3, flower.getLength());
+				stmtUpd.setInt(4, flower.getFreshness().getFreshness());
+				stmtUpd.setLong(5, flower.getPriceLong());
+				stmtUpd.setInt(6, flower.getPetals());
+				stmtUpd.setBoolean(7, flower.isSpike());
+				stmtUpd.setInt(8, bouquetId);
+				
+				stmtUpd.addBatch();
+				
+			}
+
+			stmtUpd.executeBatch();
 
 			
 		}catch(SQLException se){

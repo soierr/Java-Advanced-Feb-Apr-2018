@@ -83,11 +83,10 @@ public class BouquetServiceTest {
 		}
 		
 		/*we assume that all current sample flowers has freshness > 0*/		
-		List<GeneralFlower2> lisrFlowerNegative = bs.decrementFreshness(bouquet.getId());
+		List<GeneralFlower2> lisrFlowerZeroPrice = bs.decrementFreshness(bouquet.getId()).getListFlowersZeroPrice();
 		
-		/*we return collections with size equals to size of list flowers of current bouquet
-		 * initially it's initalized with nulls. not null means flower has current freshnes 0*/
-		Assert.assertTrue(lisrFlowerNegative.indexOf(null) == 0);
+		
+		Assert.assertTrue(lisrFlowerZeroPrice.isEmpty());
 		
 		int changedFreshnessTotal = 0;
 		

@@ -23,8 +23,11 @@ public interface DaoBouquet {
 	
 	Bouquet<? extends GeneralFlower> getBouquet(String bouquetName);
 	
-	/*the only flowers might be replaced with those set in input bouquet*/
+	/*the only flowers might be replaced with those set in input bouquet; i.e. delete then insert*/
 	void update(Bouquet2<GeneralFlower2> bouquet);
+	
+	/*replace ddl used: i.e update or/and insert*/
+	void updateAndAdd(Bouquet2<GeneralFlower2> bouquet);
 	
 	void delete(int bouquetId);
 	
